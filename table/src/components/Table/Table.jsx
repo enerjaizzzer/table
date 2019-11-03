@@ -1,83 +1,97 @@
 import React, { Component } from 'react';
+import { get } from 'lodash';
+import uniqid from 'uniqid';
+import { Droppable } from 'react-drag-and-drop';
 
-import './style.less';
+import mock from './mock';
+import HeaderColumn from '../HeaderColumn';
+
+import './style.scss';
 
 class Table extends Component {
-  mock = {
-    column: [
-      'num',
-      'first name',
-      'last name',
-      'country',
-      'city',
-      'street',
-      'home',
-      'phone',
-    ],
-    row: [
-      {
-        id: '0001',
-        name: {
-          firstName: 'Anton',
-          lastName: 'Kirienko',
-        },
-        adress: {
-          country: 'Belarus',
-          city: 'Gomel',
-          street: 'Street1',
-          home: '123'
-        },
-        phone: '+3354835187'
-      },
-      {
-        id: '0002',
-        name: {
-          firstName: 'Aleksandr',
-          lastName: 'Liakhovets',
-        },
-        adress: {
-          country: 'Belarus',
-          city: 'Gomel',
-          street: 'Street4',
-          home: '43v'
-        },
-        phone: '+44 566 5654 5'
-      },
-      {
-        id: '0003',
-        name: {
-          firstName: 'Aleksandr',
-          lastName: 'Borisenko',
-        },
-        adress: {
-          country: 'USA',
-          city: 'New York',
-          street: 'Street99',
-          home: '4444'
-        },
-        phone: '+544 5456 46 4'
-      },
-      {
-        id: '0004',
-        name: {
-          firstName: 'Vitali',
-          lastName: 'Sheremetiev',
-        },
-        adress: {
-          country: 'Belarus',
-          city: 'Dobrush',
-          street: 'Street1',
-          home: '1'
-        },
-        phone: '+5 5 54 4 56 4'
-      },
-    ]
+  editNameColumn = () => {
+
   }
+
+  renderTableHead = () => {
+    return (
+      <tr key={uniqid()}>
+        {mock.column.map((item) => (
+          <HeaderColumn
+            key={uniqid()}
+            item={item}
+          />
+        ))}
+      </tr>
+    )
+  }
+
+  getValue = (item) => {
+    switch (item) {
+      case 'number': {
+        return 'id'
+      }
+      case 'firstName': {
+        return 'name.firstName'
+      }
+      case 'lastName': {
+        return 'name.lastName'
+      }
+      case 'country': {
+        return 'adress.country'
+      }
+      case 'city': {
+        return 'adress.city'
+      }
+      case 'street': {
+        return 'adress.street'
+      }
+      case 'home': {
+        return 'adress.home'
+      }
+      case 'phone': {
+        return 'phone'
+      }
+      default: {
+        return 'error'
+      }
+    }
+  }
+
+  renderTableBody = (row) => {
+    const newRow = mock.column.map((item) => (
+      <td className="table__body-elem" key={uniqid()}>
+        {get(row, this.getValue(item))}
+      </td>
+    ))
+    return newRow;
+  }
+
+  onDrop(data) {
+    console.log(data)
+  }
+
 
   render() {
     return (
       <div className="table__container">
-        asdasd
+        <table className="table__content" border='1' width='80%'>
+          <thead className="table__header">
+            
+            <Droppable
+                types={['fruit']} // <= allowed drop types
+                onDrop={this.onDrop.bind(this)}>
+                {this.renderTableHead()}
+            </Droppable>
+          </thead>
+          <tbody className="table__body">
+            {
+              mock.row.map((row, i) => (
+                <tr className={i % 2 === 0 ? "row table__row-even" : "row"} key={uniqid()}>{this.renderTableBody(row)}</tr>
+              ))
+            }
+          </tbody>
+        </table>
       </div>
     )
   }
