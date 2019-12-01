@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Draggable } from 'react-drag-and-drop';
 
 class HeaderColumn extends Component {
   state = {
@@ -41,17 +40,12 @@ class HeaderColumn extends Component {
         key={key}
         className="tabble__header-elem"
         onClick={this.onClick}
-
       >
-        <Draggable
-          type="fruit"
-          data={value}
-        >
+
           {!renameColumnMode
             ? (
               <div className="header-elem">
                 <div clasName="header-elem__value">{value}</div>
-                <div className="header-elem__move">M</div>
               </div>
             )
             : (
@@ -61,7 +55,6 @@ class HeaderColumn extends Component {
               </form>
             )
           }
-        </Draggable>
       </th >
 
     )
