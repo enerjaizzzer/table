@@ -11,6 +11,10 @@ import HeaderColumn from '../HeaderColumn';
 import './style.scss';
 
 class Table extends Component {
+  state = {
+    dataTable: mock,
+  }
+
   componentDidMount() {
     tableDragger(document.getElementById("table"));
   }
@@ -19,15 +23,29 @@ class Table extends Component {
 
   }
 
-  renderTableHead = () => {
+  renderTableHead = (fix) => {
+    const { dataTable } = this.state;
+
     return (
-      <tr key={uniqid()}>
-        {mock.column.map((item) => (
-          <HeaderColumn
-            key={uniqid()}
-            item={item}
-          />
-        ))}
+      <tr key={uniqid()} id="header">
+        {!fix
+          ? dataTable.column.map((item, i) => (
+            <HeaderColumn
+              key={uniqid()}
+              id={`header_${i}`}
+              item={item}
+            />
+          ))
+          : dataTable.column.map((item, i) => (
+            i < fix
+              ? (
+                <HeaderColumn
+                  key={uniqid()}
+                  id={`header_${i}`}
+                  item={item}
+                />)
+              : ''
+          ))}
       </tr>
     )
   }
@@ -55,8 +73,8 @@ class Table extends Component {
       case 'home': {
         return 'adress.home'
       }
-      case 'phone': {
-        return 'phone'
+      case 'phone20': {
+        return 'phone20'
       }
       case 'phone1': {
         return 'phone1'
@@ -113,12 +131,20 @@ class Table extends Component {
     }
   }
 
-  renderTableBody = (row) => {
-    const newRow = mock.column.map((item) => (
-      <td className="table__body-elem" key={uniqid()}>
-        {get(row, this.getValue(item))}
-      </td>
-    ))
+  renderTableBody = (row, fixed) => {
+    const { dataTable } = this.state;
+    const newRow = !fixed
+      ? dataTable.column.map((item) => (
+        <td className="table__body-elem" key={uniqid()} id={row.id}>
+          {get(row, this.getValue(item))}
+        </td>
+      ))
+      : dataTable.column.map((item, i) => (
+        i < fixed ? <td className="table__body-elem" key={uniqid()} id={row.id}>
+          {get(row, this.getValue(item))}
+        </td>
+          : ''
+      ))
     return newRow;
   }
 
@@ -128,6 +154,7 @@ class Table extends Component {
 
 
   render() {
+    const { dataTable } = this.state;
     return (
       <div className="table__container">
         <PerfectScrollbar>
@@ -137,14 +164,39 @@ class Table extends Component {
             </thead>
             <tbody id='tbody' className="table__body">
               {
-                mock.row.map((row, i) => (
-                  <tr className={i % 2 === 0 ? "row table__row-even" : "row"} key={uniqid()}>{this.renderTableBody(row)}</tr>
+                dataTable.row.map((row, i) => (
+                  <tr
+                    id={i}
+                    className={i % 2 === 0 ? "row table__row-even" : "row"}
+                    key={uniqid()}
+                  >
+                    {this.renderTableBody(row)}
+                  </tr>
                 ))
               }
             </tbody>
-
           </table>
         </PerfectScrollbar>
+        <div style={{height: '800px', overflow: 'hidden'}}>
+        <table id='table-fixed' className="table__content table-fixed" border='1'>
+          <thead className="table__header">
+            {this.renderTableHead(3)}
+          </thead>
+          <tbody id='tbody' className="table__body">
+            {
+              dataTable.row.map((row, i) => (
+                <tr
+                  id={i}
+                  className={i % 2 === 0 ? "row table__row-even" : "row"}
+                  key={uniqid()}
+                >
+                  {this.renderTableBody(row, 3)}
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+        </div>
       </div>
     )
   }

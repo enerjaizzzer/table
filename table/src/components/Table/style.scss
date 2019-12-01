@@ -5,6 +5,12 @@
   flex-direction : column;
 }
 
+.table-fixed {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .table__container {
   height         : 800px;
   width          : 1700px;
@@ -12,6 +18,8 @@
   justify-content: center;
   align-items    : center;
   font-family    : Roboto;
+  position: relative;
+  overflow: hidden;
 
   .table__content {
     color          : white;
@@ -22,9 +30,10 @@
       background-color: dimgray;
       font-size       : 22px;
       cursor          : pointer;
+      position: relative;
 
       .tabble__header-elem {
-        min-width: 50px;
+        width: 100px;
 
         &:hover {
           background-color: lightslategray;
@@ -35,19 +44,6 @@
           display        : flex;
           justify-content: space-around;
           align-items    : center;
-
-          .header-elem__move {
-            font-size      : 11px;
-            color          : red;
-            width          : 20px;
-            height         : 20px;
-            border-radius  : 50%;
-            background     : white;
-            display        : flex;
-            justify-content: center;
-            align-items    : center;
-            cursor         : grab;
-          }
         }
 
 
@@ -86,6 +82,8 @@
       }
 
       .row {
+        max-height: 31px;
+
         &:hover {
           background-color: lightslategray
         }

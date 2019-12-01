@@ -31,30 +31,30 @@ class HeaderColumn extends Component {
   }
 
   render() {
-    const { key } = this.props;
+    const { key, id } = this.props;
     const { renameColumnMode, value } = this.state;
 
     return (
 
       <th
         key={key}
-        className="tabble__header-elem"
+        className={`tabble__header-elem`}
         onClick={this.onClick}
+        id={id}
       >
-
-          {!renameColumnMode
-            ? (
-              <div className="header-elem">
-                <div clasName="header-elem__value">{value}</div>
-              </div>
-            )
-            : (
-              <form className="tabble__header-elem_form" onSubmit={this.handleSubmit}>
-                <input className="tabble__header-elem_input" type="text" value={value} onChange={this.onChange} />
-                <input className="tabble__header-elem_submit" type="submit" value="ok" />
-              </form>
-            )
-          }
+        {!renameColumnMode
+          ? (
+            <div className="header-elem">
+              <div clasName="header-elem__value">{value}</div>
+            </div>
+          )
+          : (
+            <form className="tabble__header-elem_form" onSubmit={this.handleSubmit}>
+              <input className="tabble__header-elem_input" type="text" value={value} onChange={this.onChange} />
+              <input className="tabble__header-elem_submit" type="submit" value="ok" />
+            </form>
+          )
+        }
       </th >
 
     )
